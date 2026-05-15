@@ -1,0 +1,1521 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Imersão Consórcio Milionário — Daniel Pedro</title>
+<meta name="description" content="2 dias para vendedores de consórcio entenderem onde está o erro e começarem a corrigir. Método direto com quem tem mais de R$ 1 bilhão sob gestão." />
+
+<!-- Fonts: Oswald (substituto Agharti — condensed bold), Archivo (body), Playfair Display Italic (drama), JetBrains Mono (data) -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Archivo:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@1,400;1,500;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+<!-- Tailwind + GSAP -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          gold:    '#C49350',
+          gold2:   '#A07435',
+          gold3:   '#7A5520',
+          ink:     '#0A0908',
+          ink2:    '#13110F',
+          ink3:    '#1C1A17',
+          bone:    '#F2EDE3',
+          bone2:   '#E6DECE',
+          mute:    '#A89F8E',
+          mute2:   '#6E6557',
+        },
+        fontFamily: {
+          display: ['Oswald', 'Impact', 'sans-serif'],
+          body:    ['Archivo', 'system-ui', 'sans-serif'],
+          serif:   ['"Playfair Display"', 'Georgia', 'serif'],
+          mono:    ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+        },
+      }
+    }
+  };
+</script>
+
+<style>
+  :root{
+    --gold:#C49350;
+    --gold2:#A07435;
+    --gold3:#7A5520;
+    --ink:#0A0908;
+    --ink2:#13110F;
+    --ink3:#1C1A17;
+    --bone:#F2EDE3;
+    --mute:#A89F8E;
+  }
+
+  html, body { background:var(--ink); color:var(--bone); font-family:'Archivo', system-ui, sans-serif; -webkit-font-smoothing:antialiased; }
+  body { overflow-x:hidden; }
+
+  /* Display tracking — Oswald is condensed; tighten further for Agharti feel */
+  .font-display { letter-spacing:-0.01em; }
+  .display-tight { letter-spacing:-0.02em; line-height:0.88; }
+  .serif-drama { font-family:'Playfair Display', Georgia, serif; font-style:italic; font-weight:500; letter-spacing:-0.015em; line-height:0.92; }
+  .mono-label { font-family:'JetBrains Mono', monospace; font-size:0.72rem; letter-spacing:0.18em; text-transform:uppercase; }
+
+  /* Global film-grain noise overlay */
+  .noise::before{
+    content:""; position:fixed; inset:0; pointer-events:none; z-index:60; opacity:0.05;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    mix-blend-mode:overlay;
+  }
+
+  /* Magnetic button base */
+  .btn-magnetic{
+    position:relative; overflow:hidden; isolation:isolate;
+    transition: transform 480ms cubic-bezier(.25,.46,.45,.94), color 320ms ease, box-shadow 320ms ease;
+  }
+  .btn-magnetic:hover{ transform: scale(1.03); }
+  .btn-magnetic .slide{
+    position:absolute; inset:0; z-index:-1;
+    transform: translateY(101%);
+    transition: transform 520ms cubic-bezier(.7,0,.2,1);
+  }
+  .btn-magnetic:hover .slide{ transform: translateY(0%); }
+
+  /* Subtle link lift */
+  a.lift, button.lift { transition: transform 320ms cubic-bezier(.25,.46,.45,.94), color 240ms ease; }
+  a.lift:hover, button.lift:hover { transform: translateY(-1px); }
+
+  /* Nav island transitions */
+  #nav-island { transition: background-color 360ms ease, color 360ms ease, border-color 360ms ease, backdrop-filter 360ms ease, box-shadow 360ms ease; }
+
+  /* Reveal helpers (fallback if JS off) */
+  .reveal { opacity:0; transform: translateY(28px); }
+  .ready .reveal { opacity:1; transform:none; transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+
+  /* Hairlines */
+  .hl-bot { box-shadow: inset 0 -1px 0 rgba(242,237,227,0.08); }
+  .hl-top { box-shadow: inset 0 1px 0 rgba(242,237,227,0.08); }
+
+  /* Pulsing dot */
+  @keyframes pulseDot { 0%,100%{ box-shadow:0 0 0 0 rgba(188,151,89,0.6);} 50%{ box-shadow:0 0 0 10px rgba(188,151,89,0);} }
+  .pulse-gold { animation: pulseDot 2.2s infinite; }
+  @keyframes pulseGreen { 0%,100%{ box-shadow:0 0 0 0 rgba(80,180,120,0.6);} 50%{ box-shadow:0 0 0 8px rgba(80,180,120,0);} }
+  .pulse-green { animation: pulseGreen 2.2s infinite; }
+
+  /* Caret blink for typewriter */
+  @keyframes caretBlink { 0%,49%{opacity:1;} 50%,100%{opacity:0;} }
+  .caret { display:inline-block; width:0.55ch; background: var(--gold); height:1em; vertical-align:-0.12em; margin-left:2px; animation: caretBlink 1.05s steps(1) infinite; }
+
+  /* Marquee */
+  @keyframes mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { animation: mq 40s linear infinite; }
+
+  /* Hero image stand-in (no copyrighted imagery; use sober gold-on-black gradient texture) */
+  .hero-bg{
+    background:
+      radial-gradient(1200px 700px at 78% 18%, rgba(188,151,89,0.22), transparent 60%),
+      radial-gradient(900px 540px at 18% 88%, rgba(99,88,76,0.35), transparent 60%),
+      linear-gradient(180deg, #0A0908 0%, #13110F 70%, #0A0908 100%);
+  }
+
+  /* Global ambient lights — drifting golden glows across the page */
+  .ambient-lights{
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .ambient-lights .glow{
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0.55; mix-blend-mode: screen;
+    will-change: transform;
+  }
+  .ambient-lights .g1 { width: 520px; height: 520px; left: -10%; top: 8%;
+    background: radial-gradient(circle, rgba(188,151,89,0.55), transparent 65%);
+    animation: float1 22s ease-in-out infinite; }
+  .ambient-lights .g2 { width: 640px; height: 640px; right: -12%; top: 30%;
+    background: radial-gradient(circle, rgba(212,170,102,0.5), transparent 65%);
+    animation: float2 28s ease-in-out infinite; }
+  .ambient-lights .g3 { width: 480px; height: 480px; left: 35%; top: 65%;
+    background: radial-gradient(circle, rgba(160,120,60,0.45), transparent 65%);
+    animation: float3 24s ease-in-out infinite; }
+  .ambient-lights .g4 { width: 380px; height: 380px; right: 15%; bottom: 5%;
+    background: radial-gradient(circle, rgba(188,151,89,0.5), transparent 65%);
+    animation: float1 30s ease-in-out infinite reverse; }
+  .ambient-lights .g5 { width: 360px; height: 360px; left: 8%; bottom: 25%;
+    background: radial-gradient(circle, rgba(140,100,50,0.4), transparent 65%);
+    animation: float2 26s ease-in-out infinite reverse; }
+  @keyframes float1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(80px,-60px) scale(1.15); } }
+  @keyframes float2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-100px,80px) scale(0.9); } }
+  @keyframes float3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px,-90px) scale(1.1); } }
+
+  /* Sit content above ambient layer */
+  body > section, body > footer, body > nav, body > header { position: relative; z-index: 1; }
+  .hero-bg::after{
+    content:""; position:absolute; inset:0; pointer-events:none;
+    background:
+      repeating-linear-gradient(90deg, rgba(242,237,227,0.025) 0 1px, transparent 1px 80px),
+      linear-gradient(180deg, transparent 30%, rgba(10,9,8,0.9) 100%);
+  }
+
+  /* Sticky stack container */
+  .stack-card { box-shadow: 0 30px 80px -30px rgba(0,0,0,0.8), inset 0 1px 0 rgba(242,237,227,0.04); }
+
+  /* Borders */
+  .ring-bone { box-shadow: inset 0 0 0 1px rgba(242,237,227,0.12); }
+  .ring-gold { box-shadow: inset 0 0 0 1px rgba(188,151,89,0.45); }
+
+  /* Shuffler stack */
+  .stack-shadow { box-shadow: 0 20px 50px -25px rgba(0,0,0,0.8); }
+
+  /* FAQ */
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display:none; }
+  details[open] .chev { transform: rotate(45deg); }
+  .chev { transition: transform .35s cubic-bezier(.2,.7,.2,1); }
+
+  /* Section number tag */
+  .num-tag::before { content: attr(data-num); }
+
+  /* Reduce motion */
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  /* ============================================================
+     MOBILE / TABLET — Otimizações profissionais
+  ============================================================= */
+
+  /* Tablet (até 1023px) */
+  @media (max-width: 1023px){
+    /* Sticky stack — desempilhar (não trava no mobile, fica em sequência) */
+    #stack-wrapper .stack-card {
+      position: relative !important;
+      top: auto !important;
+      transform: none !important;
+      filter: none !important;
+      opacity: 1 !important;
+      margin-top: 1.5rem;
+    }
+    /* Grids da seção "Quem é" — coluna única */
+    #quem .grid.lg\:grid-cols-\[auto_1fr\] { grid-template-columns: 1fr !important; }
+  }
+
+  /* Mobile (até 767px) */
+  @media (max-width: 767px){
+    body { font-size: 15px; }
+
+    /* Hero — proporções controladas */
+    #topo { padding-top: 6rem !important; padding-bottom: 4rem !important; min-height: auto !important; }
+    #topo h1 {
+      font-size: clamp(2.4rem, 11vw, 3.8rem) !important;
+      line-height: 0.92 !important;
+      letter-spacing: -0.02em !important;
+      word-break: normal;
+    }
+    #topo h1 .serif-drama { font-size: 1.02em !important; }
+    #topo p { font-size: 16px !important; line-height: 1.5 !important; }
+
+    /* Headlines de todas as seções */
+    section h2 {
+      font-size: clamp(2rem, 9vw, 3.2rem) !important;
+      line-height: 0.95 !important;
+      letter-spacing: -0.02em !important;
+    }
+    section h2 .serif-drama { font-size: 1.02em !important; }
+
+    /* Drama serif quotes */
+    .serif-drama {
+      font-size: 1.4rem !important;
+      line-height: 1.25 !important;
+    }
+    section h2 .serif-drama,
+    section h1 .serif-drama { font-size: inherit !important; line-height: inherit !important; }
+
+    /* Reduzir padding vertical */
+    section { padding-top: 4rem !important; padding-bottom: 4rem !important; padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+
+    /* Logo do hero */
+    #topo img[alt="Consórcio Milionário"] { width: 160px !important; }
+
+    /* Prova row do hero — não força 2 cols se apertar */
+    #topo .grid-cols-2 > div .font-display { font-size: 22px !important; }
+
+    /* Marquee menor */
+    .marquee-track { font-size: 10px !important; gap: 1.5rem !important; }
+    .marquee-track > div { gap: 1.5rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+
+    /* Cards do problema — força stack */
+    #problema .grid.md\:grid-cols-3 { grid-template-columns: 1fr !important; }
+    #problema .grid.md\:grid-cols-3 > div { border-bottom: 1px solid rgba(242,237,227,0.08); }
+    #problema p.font-display { font-size: 22px !important; }
+
+    /* Cards do método (Frente 01/02/03) */
+    #metodo .grid.lg\:grid-cols-3 { grid-template-columns: 1fr !important; gap: 1rem !important; }
+    #metodo h3 { font-size: 22px !important; }
+
+    /* Stack cards — Dia 01/02/Saída */
+    #stack-wrapper .stack-card { grid-template-columns: 1fr !important; }
+    #stack-wrapper .stack-card .min-h-\[320px\] { min-height: 220px !important; }
+    #stack-wrapper .stack-card h3 { font-size: 32px !important; line-height: 1 !important; }
+    #stack-wrapper .stack-card .p-8,
+    #stack-wrapper .stack-card .sm\:p-12,
+    #stack-wrapper .stack-card .lg\:p-14 { padding: 1.75rem !important; }
+
+    /* Quem é Daniel Pedro — empilhar */
+    #quem .grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+    #quem .w-\[280px\], #quem .sm\:w-\[340px\] { width: 240px !important; margin-left: auto !important; margin-right: auto !important; }
+    #quem h2 { font-size: clamp(2rem, 9vw, 3rem) !important; }
+    #quem .grid-cols-2 .bg-ink2 { padding: 1.25rem !important; }
+    #quem .grid-cols-2 .font-display { font-size: 16px !important; }
+    #quem .grid-cols-2 .text-\[32px\] { font-size: 26px !important; }
+
+    /* Prova social — 1 coluna */
+    #prova .grid.md\:grid-cols-3 { grid-template-columns: 1fr !important; }
+    #prova blockquote { font-size: 18px !important; line-height: 1.3 !important; }
+
+    /* Vaga — botão maior */
+    #vaga a[data-cta="vaga"] { padding-left: 1.5rem !important; padding-right: 1.5rem !important; font-size: 13px !important; width: 100%; justify-content: center; max-width: 320px; }
+
+    /* FAQ */
+    details summary { padding: 1.25rem !important; }
+    details summary span:first-child { font-size: 17px !important; line-height: 1.2; }
+    details > div { padding: 0 1.25rem 1.5rem !important; }
+
+    /* CTA final */
+    #cta-final { padding-top: 5rem !important; padding-bottom: 5rem !important; }
+    #cta-final h2 { font-size: clamp(2rem, 10vw, 3.4rem) !important; line-height: 0.95 !important; }
+    #cta-final a[data-cta="final"] { width: 100%; max-width: 340px; justify-content: center; padding: 1.1rem 1.5rem !important; font-size: 13px !important; }
+    #cta-final .grid.grid-cols-2 { gap: 1.25rem !important; }
+
+    /* CTA buttons gerais */
+    .btn-magnetic { font-size: 12.5px !important; padding-top: 0.9rem !important; padding-bottom: 0.9rem !important; }
+
+    /* Mid CTA do método — empilha */
+    #metodo .mt-16.flex { flex-direction: column !important; align-items: stretch !important; text-align: center; }
+    #metodo .mt-16.flex a { align-self: center; }
+
+    /* Glows menos pesadas em mobile (performance + visual) */
+    .ambient-lights .glow { filter: blur(80px) !important; opacity: 0.7 !important; }
+    .ambient-lights .glow:nth-child(n+8) { display: none; }
+
+    /* Footer/copyright */
+    body > div[class*="bg-ink"][class*="py-8"] { font-size: 10px !important; padding: 1.5rem 1rem !important; line-height: 1.6; }
+
+    /* Hide scroll indicator on mobile */
+    .rotate-90 { display: none !important; }
+
+    /* Display-tight ajuste global */
+    .display-tight { letter-spacing: -0.02em !important; line-height: 0.92 !important; }
+
+    /* Garantir que nenhum filho do hero force largura fixa */
+    #topo span[style*="width:"] { width: auto !important; height: auto !important; }
+  }
+
+  /* Smartphones pequenos (até 400px) */
+  @media (max-width: 400px){
+    #topo h1 { font-size: clamp(2rem, 12vw, 3rem) !important; }
+    section h2 { font-size: clamp(1.8rem, 10vw, 2.6rem) !important; }
+    #topo p { font-size: 15px !important; }
+    .mono-label { font-size: 0.62rem !important; letter-spacing: 0.14em !important; }
+  }
+</style>
+</head>
+<body class="noise antialiased text-center">
+
+<!-- Ambient drifting glows -->
+<div class="ambient-lights" aria-hidden="true">
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+  <div class="glow g3"></div>
+  <div class="glow g4"></div>
+  <div class="glow g5"></div>
+  <div class="glow g6"></div>
+  <div class="glow g7"></div>
+  <div class="glow g8"></div>
+  <div class="glow g9"></div>
+  <div class="glow g10"></div>
+  <div class="glow g11"></div>
+  <div class="glow g12"></div>
+</div>
+
+<!-- ============================================================
+     B. HERO — A Cena de Abertura (centralizada)
+============================================================= -->
+<section id="topo" class="relative min-h-[100dvh] flex flex-col items-center justify-center hero-bg overflow-hidden text-center px-6 sm:px-10 py-24 sm:py-28">
+
+  <!-- Brand logo -->
+  <div class="reveal mb-8 sm:mb-10 flex items-center justify-center">
+    <img src="assets/logo-consorcio-milionario.png" alt="Consórcio Milionário" class="w-[180px] sm:w-[260px] md:w-[320px] lg:w-[380px] h-auto select-none" draggable="false" />
+  </div>
+  <div class="reveal mono-label text-gold/90 mb-8 sm:mb-10 flex items-center gap-3 justify-center">
+    <span class="w-8 h-px bg-gold/70"></span>
+    <span>com Daniel Pedro</span>
+    <span class="w-8 h-px bg-gold/70"></span>
+  </div>
+
+  <div class="relative z-10 max-w-[1180px] mx-auto">
+
+    <h1 class="reveal display-tight font-display font-semibold uppercase text-bone
+               text-[12vw] sm:text-[10vw] lg:text-[8.4rem] xl:text-[9.2rem] leading-[0.86]">
+      Pare de vender no
+      <span class="block">
+        <span class="serif-drama text-gold lowercase normal-case" style="font-size:1.05em;">improviso.</span>
+      </span>
+    </h1>
+
+    <p class="reveal mt-6 sm:mt-8 max-w-2xl mx-auto text-bone/75 text-[17px] sm:text-[19px] leading-[1.55]">
+      2 dias presenciais para você entender, com clareza cirúrgica,
+      <span class="text-bone">por que suas vendas não crescem</span>
+      mesmo trabalhando mais do que deveria — e o que corrigir
+      em mercado, produto e processo.
+    </p>
+
+    <div class="reveal mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+      <a href="#cta-final" data-cta="hero"
+         class="btn-magnetic relative inline-flex items-center gap-3 rounded-full px-7 sm:px-8 py-4
+                bg-gold text-ink font-display font-semibold uppercase tracking-wider text-[14px]">
+        <span class="slide bg-bone"></span>
+        <span>Quero garantir minha vaga</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <!-- Quick proof row -->
+    <div class="reveal mt-12 sm:mt-16 grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-6 max-w-3xl mx-auto">
+      <div>
+        <div class="font-display text-gold text-[28px] sm:text-[34px] leading-none">R$ 1 bi+</div>
+        <div class="mono-label text-bone/55 mt-2">Sob gestão</div>
+      </div>
+      <div>
+        <div class="font-display text-gold text-[28px] sm:text-[34px] leading-none">04</div>
+        <div class="mono-label text-bone/55 mt-2">Empresas no setor</div>
+      </div>
+      <div>
+        <div class="font-display text-gold text-[28px] sm:text-[34px] leading-none">02</div>
+        <div class="mono-label text-bone/55 mt-2">Dias presenciais</div>
+      </div>
+      <div>
+        <div class="font-display text-gold text-[28px] sm:text-[34px] leading-none">IA</div>
+        <div class="mono-label text-bone/55 mt-2">P/ consórcios — criador</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     MARQUEE — autoridade
+============================================================= -->
+<section aria-label="prova de autoridade" class="relative bg-ink hl-bot hl-top py-5 overflow-hidden">
+  <div class="flex marquee-track whitespace-nowrap mono-label text-bone/50 gap-12 will-change-transform">
+    <!-- duplicated for seamless loop -->
+    <div class="flex gap-12 px-6">
+      <span>R$ 1 bilhão sob gestão</span><span class="text-gold">◆</span>
+      <span>Fundador · DP Soluções</span><span class="text-gold">◆</span>
+      <span>Fundador · DP Educação</span><span class="text-gold">◆</span>
+      <span>Fundador · DP Consórcios</span><span class="text-gold">◆</span>
+      <span>Criador · IA para Consórcios</span><span class="text-gold">◆</span>
+      <span>Operador de vendas</span><span class="text-gold">◆</span>
+    </div>
+    <div class="flex gap-12 px-6" aria-hidden="true">
+      <span>R$ 1 bilhão sob gestão</span><span class="text-gold">◆</span>
+      <span>Fundador · DP Soluções</span><span class="text-gold">◆</span>
+      <span>Fundador · DP Educação</span><span class="text-gold">◆</span>
+      <span>Fundador · DP Consórcios</span><span class="text-gold">◆</span>
+      <span>Criador · IA para Consórcios</span><span class="text-gold">◆</span>
+      <span>Operador de vendas</span><span class="text-gold">◆</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROBLEMA — Espelhar a dor
+============================================================= -->
+<section id="problema" class="relative bg-ink py-24 sm:py-36 px-6 sm:px-10">
+  <div class="max-w-6xl mx-auto text-center">
+    <div class="reveal mono-label text-gold mb-10 flex items-center gap-3 justify-center">
+      <span class="num-tag" data-num="01 —"></span>
+      <span class="text-bone/60">O diagnóstico antes da promessa</span>
+    </div>
+
+    <h2 class="reveal display-tight font-display font-semibold uppercase text-bone
+               text-[12vw] sm:text-[7.4vw] lg:text-[6rem] leading-[0.9]">
+      Você não vende pouco<br/>
+      por <span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">falta de esforço.</span>
+    </h2>
+
+    <p class="reveal mt-10 sm:mt-12 max-w-3xl mx-auto text-bone/75 text-[19px] sm:text-[22px] leading-[1.5]">
+      Vende pouco porque não tem clareza de
+      <span class="text-bone">mercado, produto e processo</span>.
+      Enquanto isso não estiver organizado, você vai continuar trabalhando muito
+      com resultado instável.
+    </p>
+
+    <div class="reveal mt-16 grid md:grid-cols-3 gap-px bg-bone/10 ring-bone rounded-[2rem] overflow-hidden">
+      <div class="bg-ink p-8 sm:p-10">
+        <div class="mono-label text-gold mb-5">Sintoma 01</div>
+        <p class="font-display uppercase text-bone text-[24px] sm:text-[28px] leading-[1.05]">
+          Mês bom,<br/>mês ruim,<br/>mês ruim.
+        </p>
+        <p class="text-bone/60 mt-4 text-[15px] leading-[1.55]">
+          Resultado oscila porque a venda depende do dia, do humor e da sorte —
+          não de um processo.
+        </p>
+      </div>
+      <div class="bg-ink p-8 sm:p-10">
+        <div class="mono-label text-gold mb-5">Sintoma 02</div>
+        <p class="font-display uppercase text-bone text-[24px] sm:text-[28px] leading-[1.05]">
+          Trabalha mais.<br/>Vende o<br/>mesmo.
+        </p>
+        <p class="text-bone/60 mt-4 text-[15px] leading-[1.55]">
+          Esforço sem método não escala. Você gasta energia onde não há
+          alavanca, e perde venda onde havia.
+        </p>
+      </div>
+      <div class="bg-ink p-8 sm:p-10">
+        <div class="mono-label text-gold mb-5">Sintoma 03</div>
+        <p class="font-display uppercase text-bone text-[24px] sm:text-[28px] leading-[1.05]">
+          Começa do<br/>zero todo<br/>mês.
+        </p>
+        <p class="text-bone/60 mt-4 text-[15px] leading-[1.55]">
+          Sem pipeline, sem oferta calibrada, sem leitura de mercado — todo
+          mês é uma reinauguração.
+        </p>
+      </div>
+    </div>
+
+    <p class="reveal mt-14 sm:mt-16 max-w-3xl mx-auto serif-drama text-[28px] sm:text-[36px] text-bone/85">
+      Quem vende pouco no consórcio não tem problema de mercado.
+      <span class="text-gold">Tem problema de venda.</span>
+      E isso não melhora sozinho.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     C. FEATURES — Artefatos Funcionais Interativos
+     (Adaptados ao consórcio: Diagnóstico Shuffler / Live Feed Typewriter / Cursor Scheduler do Dia 1+2)
+============================================================= -->
+<section id="metodo" class="relative bg-ink2 py-24 sm:py-36 px-6 sm:px-10">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="reveal text-center mb-14 sm:mb-20 flex flex-col items-center">
+      <div class="mono-label text-gold mb-6 flex items-center gap-3 justify-center">
+        <span class="num-tag" data-num="02 —"></span>
+        <span class="text-bone/60">O que muda em 2 dias</span>
+      </div>
+      <h2 class="display-tight font-display font-semibold uppercase text-bone
+                 text-[12vw] sm:text-[7vw] lg:text-[5.6rem]">
+        Clareza, não<br/><span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">conteúdo.</span>
+      </h2>
+      <p class="max-w-xl mx-auto mt-8 text-bone/65 text-[16px] leading-[1.6]">
+        Três frentes que organizam sua venda. Cada uma corresponde a um erro
+        que você está cometendo agora — e ao que será corrigido na imersão.
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+
+      <!-- CARD 1 — Diagnostic Shuffler -->
+      <article class="reveal stack-shadow bg-ink rounded-[2rem] p-7 sm:p-8 ring-bone relative overflow-hidden">
+        <div class="flex items-center justify-between mb-7">
+          <span class="mono-label text-gold">Frente 01 / Mercado</span>
+          <span class="mono-label text-bone/40">Diagnóstico</span>
+        </div>
+        <h3 class="font-display uppercase text-bone text-[26px] sm:text-[30px] leading-[1.05]">
+          Onde o dinheiro<br/>realmente está.
+        </h3>
+        <p class="text-bone/60 mt-4 text-[14.5px] leading-[1.55] mb-8">
+          Como o mercado de consórcio funciona, quem domina e por quê — e
+          em que pedaço dele você está, sem perceber.
+        </p>
+
+      </article>
+
+      <!-- CARD 2 — Telemetry Typewriter -->
+      <article class="reveal stack-shadow bg-ink rounded-[2rem] p-7 sm:p-8 ring-bone relative overflow-hidden">
+        <div class="flex items-center justify-between mb-7">
+          <span class="mono-label text-gold">Frente 02 / Produto</span>
+          <span class="mono-label text-bone/40 flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold pulse-gold"></span> Live feed
+          </span>
+        </div>
+        <h3 class="font-display uppercase text-bone text-[26px] sm:text-[30px] leading-[1.05]">
+          Por que sua oferta<br/>não gira.
+        </h3>
+        <p class="text-bone/60 mt-4 text-[14.5px] leading-[1.55] mb-7">
+          Onde você perde venda sem perceber. Como ler a oferta pelo
+          comportamento real do cliente — não pelo seu desejo.
+        </p>
+
+      </article>
+
+      <!-- CARD 3 — Cursor Protocol Scheduler -->
+      <article class="reveal stack-shadow bg-ink rounded-[2rem] p-7 sm:p-8 ring-bone relative overflow-hidden">
+        <div class="flex items-center justify-between mb-7">
+          <span class="mono-label text-gold">Frente 03 / Processo</span>
+          <span class="mono-label text-bone/40">Semana ativa</span>
+        </div>
+        <h3 class="font-display uppercase text-bone text-[26px] sm:text-[30px] leading-[1.05]">
+          Pare de começar<br/>do zero.
+        </h3>
+        <p class="text-bone/60 mt-4 text-[14.5px] leading-[1.55] mb-7">
+          Conduzir uma venda com segurança vem de um processo
+          repetível, não de talento. Bloqueie a semana, salve, repita.
+        </p>
+
+      </article>
+    </div>
+
+    <!-- Solution bullets — what they leave with -->
+    <div class="reveal mt-20 sm:mt-28 max-w-3xl mx-auto text-center">
+      <h3 class="font-display uppercase text-bone text-[28px] sm:text-[40px] leading-[1] mb-10">
+        O que você sai<br/><span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">entendendo.</span>
+      </h3>
+      <ul class="divide-y divide-bone/10 text-left">
+        <li class="flex gap-4 py-4 items-start">
+          <span class="mono-label text-gold pt-1 w-10 shrink-0">01</span>
+          <span class="text-bone/85 text-[16.5px] leading-[1.55]">Como o mercado de consórcio realmente funciona — e onde o dinheiro está.</span>
+        </li>
+        <li class="flex gap-4 py-4 items-start">
+          <span class="mono-label text-gold pt-1 w-10 shrink-0">02</span>
+          <span class="text-bone/85 text-[16.5px] leading-[1.55]">Por que sua oferta não gira e onde você perde venda sem perceber.</span>
+        </li>
+        <li class="flex gap-4 py-4 items-start">
+          <span class="mono-label text-gold pt-1 w-10 shrink-0">03</span>
+          <span class="text-bone/85 text-[16.5px] leading-[1.55]">Como parar de começar do zero todo mês com um processo estruturado.</span>
+        </li>
+        <li class="flex gap-4 py-4 items-start">
+          <span class="mono-label text-gold pt-1 w-10 shrink-0">04</span>
+          <span class="text-bone/85 text-[16.5px] leading-[1.55]">Como conduzir uma venda com mais segurança e clareza.</span>
+        </li>
+        <li class="flex gap-4 py-4 items-start">
+          <span class="mono-label text-gold pt-1 w-10 shrink-0">05</span>
+          <span class="text-bone/85 text-[16.5px] leading-[1.55]">O que está travando seu crescimento hoje — específico, não genérico.</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Mid CTA -->
+    <div class="reveal mt-16 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 p-6 sm:p-8 rounded-[2rem] bg-ink ring-bone">
+      <div>
+        <div class="mono-label text-gold mb-2">VAGAS LIMITADAS POR EDIÇÃO</div>
+        <p class="font-display uppercase text-bone text-[22px] sm:text-[28px] leading-[1.05]">
+          Imersão presencial · 2 dias.
+        </p>
+      </div>
+      <a href="#cta-final" data-cta="meio"
+         class="btn-magnetic relative inline-flex items-center gap-3 rounded-full px-7 py-4
+                bg-gold text-ink font-display font-semibold uppercase tracking-wider text-[14px] self-start sm:self-auto">
+        <span class="slide bg-bone"></span>
+        <span>Garantir minha vaga</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     D. PHILOSOPHY — O Manifesto
+============================================================= -->
+<section id="filosofia" class="relative bg-ink overflow-hidden py-28 sm:py-44 px-6 sm:px-10">
+  <!-- Parallax texture -->
+  <div id="philosophy-bg" class="absolute inset-0 opacity-[0.18] pointer-events-none"
+       style="background:
+         radial-gradient(800px 500px at 50% 30%, rgba(188,151,89,0.5), transparent 60%),
+         radial-gradient(600px 400px at 50% 80%, rgba(99,88,76,0.6), transparent 60%);">
+  </div>
+
+  <div class="relative max-w-5xl mx-auto text-center">
+    <div class="mono-label text-gold mb-10 flex items-center gap-3 justify-center">
+      <span class="num-tag" data-num="03 —"></span>
+      <span class="text-bone/60">Manifesto</span>
+    </div>
+
+    <p id="philosophy-small" class="text-bone/55 text-[17px] sm:text-[20px] max-w-2xl mx-auto leading-[1.5] mb-8">
+      A maioria do mercado de consórcio foca em: <span class="text-bone">script, gatilho e fôlego para ligar mais.</span>
+    </p>
+
+    <h2 id="philosophy-big" class="font-display uppercase text-bone display-tight
+               text-[12vw] sm:text-[7vw] lg:text-[6.4rem] leading-[0.9]">
+      Nós focamos em
+      <span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">clareza.</span>
+    </h2>
+
+    <p class="mt-10 max-w-2xl mx-auto text-bone/70 text-[16px] sm:text-[18px] leading-[1.6]">
+      Sem promessa, sem fórmula pronta, sem romantização. Você sai da imersão com
+      uma leitura honesta de mercado, produto e processo — e com a próxima
+      ação clara para corrigir o que está travando seu resultado hoje.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     E. PROTOCOL — Sticky Stacking (Os 2 dias)
+============================================================= -->
+<section id="dias" class="relative bg-ink2">
+
+  <div class="px-6 sm:px-10 pt-24 sm:pt-32 pb-10 max-w-6xl mx-auto text-center">
+    <div class="reveal mono-label text-gold mb-8 flex items-center gap-3 justify-center">
+      <span class="num-tag" data-num="04 —"></span>
+      <span class="text-bone/60">Protocolo · 2 dias</span>
+    </div>
+    <h2 class="reveal display-tight font-display font-semibold uppercase text-bone
+               text-[12vw] sm:text-[7.4vw] lg:text-[6rem]">
+      Como funciona<br/>a <span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">imersão.</span>
+    </h2>
+    <p class="reveal mt-8 max-w-2xl mx-auto text-bone/65 text-[16px] sm:text-[18px] leading-[1.6]">
+      Dois dias presenciais, ambiente fechado, número limitado de vendedores.
+      Cada dia abre uma camada do diagnóstico — e fecha com o que muda
+      na sua operação a partir da segunda-feira seguinte.
+    </p>
+  </div>
+
+  <!-- Sticky stack -->
+  <div id="stack-wrapper" class="relative px-4 sm:px-10 pb-24 sm:pb-36">
+    <div class="max-w-6xl mx-auto">
+
+      <!-- Card 1 — Dia 1 (rotating helix) -->
+      <article class="stack-card sticky top-24 sm:top-28 mt-8 rounded-[2.5rem] bg-ink ring-bone overflow-hidden grid lg:grid-cols-[1.1fr_1fr]">
+        <div class="p-8 sm:p-12 lg:p-14">
+          <div class="flex items-center justify-between mb-10">
+            <span class="mono-label text-gold">DIA 01 / 02</span>
+            <span class="mono-label text-bone/40">Mercado</span>
+          </div>
+          <h3 class="font-display uppercase text-bone text-[40px] sm:text-[56px] lg:text-[64px] leading-[0.95]">
+            Onde o<br/><span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">dinheiro</span><br/>está.
+          </h3>
+          <p class="text-bone/65 mt-6 max-w-md text-[15.5px] leading-[1.6]">
+            Como o mercado de consórcio realmente funciona, onde o dinheiro
+            está, quem domina e por quê — e por que a maioria dos vendedores
+            continua pequena.
+          </p>
+          <ul class="mt-8 grid gap-3 mono-label text-bone/70">
+            <li class="flex gap-3"><span class="text-gold">›</span> Mapa real do mercado, não o vendido</li>
+            <li class="flex gap-3"><span class="text-gold">›</span> Onde o capital se concentra</li>
+            <li class="flex gap-3"><span class="text-gold">›</span> Por que o vendedor médio fica preso</li>
+          </ul>
+        </div>
+        <div class="relative bg-ink2 hl-top lg:hl-top lg:shadow-[inset_1px_0_0_rgba(242,237,227,0.08)] min-h-[320px]">
+          <!-- Rotating helix -->
+          <svg viewBox="0 0 400 400" class="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
+            <defs>
+              <radialGradient id="g1" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#C49350" stop-opacity="0.4"/>
+                <stop offset="70%" stop-color="#C49350" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <circle cx="200" cy="200" r="160" fill="url(#g1)"/>
+            <g class="helix" style="transform-origin:200px 200px;">
+              <circle cx="200" cy="200" r="150" fill="none" stroke="#C49350" stroke-opacity="0.25" stroke-width="1"/>
+              <circle cx="200" cy="200" r="120" fill="none" stroke="#C49350" stroke-opacity="0.4" stroke-width="1"/>
+              <circle cx="200" cy="200" r="90"  fill="none" stroke="#C49350" stroke-opacity="0.55" stroke-width="1"/>
+              <circle cx="200" cy="200" r="60"  fill="none" stroke="#C49350" stroke-opacity="0.7" stroke-width="1.2"/>
+              <circle cx="200" cy="200" r="30"  fill="#C49350" fill-opacity="0.15" stroke="#C49350" stroke-width="1.2"/>
+            </g>
+            <g class="helix-dots" style="transform-origin:200px 200px;">
+              <!-- orbiting nodes -->
+              <circle cx="350" cy="200" r="4" fill="#C49350"/>
+              <circle cx="50"  cy="200" r="4" fill="#C49350"/>
+              <circle cx="200" cy="50"  r="3" fill="#F2EDE3"/>
+              <circle cx="200" cy="350" r="3" fill="#F2EDE3"/>
+            </g>
+            <text x="200" y="206" text-anchor="middle" fill="#F2EDE3" font-family="Oswald" font-weight="600" font-size="14" letter-spacing="3">MERCADO</text>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Card 2 — Dia 2 (laser scan) -->
+      <article class="stack-card sticky top-24 sm:top-28 mt-8 rounded-[2.5rem] bg-ink ring-bone overflow-hidden grid lg:grid-cols-[1.1fr_1fr]">
+        <div class="p-8 sm:p-12 lg:p-14">
+          <div class="flex items-center justify-between mb-10">
+            <span class="mono-label text-gold">DIA 02 / 02</span>
+            <span class="mono-label text-bone/40">Produto · Venda · Processo</span>
+          </div>
+          <h3 class="font-display uppercase text-bone text-[40px] sm:text-[56px] lg:text-[64px] leading-[0.95]">
+            O que<br/><span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">realmente</span><br/>vende.
+          </h3>
+          <p class="text-bone/65 mt-6 max-w-md text-[15.5px] leading-[1.6]">
+            Por que sua oferta não gira. Onde você perde venda sem perceber.
+            Como conduzir com segurança e clareza — e o que está travando seu
+            crescimento agora.
+          </p>
+          <ul class="mt-8 grid gap-3 mono-label text-bone/70">
+            <li class="flex gap-3"><span class="text-gold">›</span> Oferta calibrada · não roteirizada</li>
+            <li class="flex gap-3"><span class="text-gold">›</span> Condução em vez de convencimento</li>
+            <li class="flex gap-3"><span class="text-gold">›</span> Processo repetível para a semana</li>
+          </ul>
+        </div>
+        <div class="relative bg-ink2 lg:shadow-[inset_1px_0_0_rgba(242,237,227,0.08)] min-h-[320px] overflow-hidden">
+          <!-- Resultado: gráfico ascendente -->
+          <svg viewBox="0 0 400 400" class="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#C49350" stop-opacity="0.45"/>
+                <stop offset="100%" stop-color="#C49350" stop-opacity="0"/>
+              </linearGradient>
+              <linearGradient id="chartStroke" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stop-color="#C49350" stop-opacity="0.6"/>
+                <stop offset="100%" stop-color="#F2EDE3"/>
+              </linearGradient>
+              <pattern id="grid" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse">
+                <circle cx="16" cy="16" r="1.4" fill="#F2EDE3" fill-opacity="0.18"/>
+              </pattern>
+              <linearGradient id="scan" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stop-color="#C49350" stop-opacity="0"/>
+                <stop offset="50%" stop-color="#C49350" stop-opacity="0.7"/>
+                <stop offset="100%" stop-color="#C49350" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <rect width="400" height="400" fill="url(#grid)"/>
+            <!-- Eixos sutis -->
+            <line x1="40" y1="340" x2="380" y2="340" stroke="#F2EDE3" stroke-opacity="0.12" stroke-width="1"/>
+            <line x1="40" y1="60" x2="40" y2="340" stroke="#F2EDE3" stroke-opacity="0.12" stroke-width="1"/>
+            <!-- Área sob a curva -->
+            <path class="chart-area" d="M40,310 L100,295 L160,260 L220,220 L280,170 L340,110 L380,75 L380,340 L40,340 Z" fill="url(#chartFill)" opacity="0"/>
+            <!-- Linha ascendente -->
+            <path class="chart-line" d="M40,310 L100,295 L160,260 L220,220 L280,170 L340,110 L380,75" fill="none" stroke="url(#chartStroke)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="600" stroke-dashoffset="600"/>
+            <!-- Pontos -->
+            <g class="chart-dots">
+              <circle cx="100" cy="295" r="3" fill="#C49350"/>
+              <circle cx="160" cy="260" r="3" fill="#C49350"/>
+              <circle cx="220" cy="220" r="3" fill="#C49350"/>
+              <circle cx="280" cy="170" r="3.5" fill="#C49350"/>
+              <circle cx="340" cy="110" r="4" fill="#F2EDE3"/>
+            </g>
+            <!-- Seta no topo -->
+            <g class="chart-arrow" opacity="0">
+              <line x1="340" y1="110" x2="380" y2="75" stroke="#F2EDE3" stroke-width="3" stroke-linecap="round"/>
+              <polygon points="380,75 365,75 380,90" fill="#F2EDE3"/>
+            </g>
+            <text x="200" y="385" text-anchor="middle" fill="#F2EDE3" font-family="Oswald" font-weight="600" font-size="12" letter-spacing="3" opacity="0.55">RESULTADO</text>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Card 3 — Saída (EKG pulse) -->
+      <article class="stack-card sticky top-24 sm:top-28 mt-8 rounded-[2.5rem] bg-ink ring-bone overflow-hidden grid lg:grid-cols-[1.1fr_1fr]">
+        <div class="p-8 sm:p-12 lg:p-14">
+          <div class="flex items-center justify-between mb-10">
+            <span class="mono-label text-gold">SAÍDA</span>
+            <span class="mono-label text-bone/40">Próxima segunda-feira</span>
+          </div>
+          <h3 class="font-display uppercase text-bone text-[40px] sm:text-[56px] lg:text-[64px] leading-[0.95]">
+            Você sai com<br/><span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">próximo passo</span><br/>claro.
+          </h3>
+          <p class="text-bone/65 mt-6 max-w-md text-[15.5px] leading-[1.6]">
+            Não com mais conteúdo para consumir — com leitura honesta sobre
+            o que precisa mudar na sua operação a partir de segunda-feira.
+          </p>
+          <ul class="mt-8 grid gap-3 mono-label text-bone/70">
+            <li class="flex gap-3"><span class="text-gold">›</span> Diagnóstico individual do erro principal</li>
+            <li class="flex gap-3"><span class="text-gold">›</span> Movimentos prioritários para 30 dias</li>
+            <li class="flex gap-3"><span class="text-gold">›</span> Critério para parar de improvisar</li>
+          </ul>
+        </div>
+        <div class="relative bg-ink2 lg:shadow-[inset_1px_0_0_rgba(242,237,227,0.08)] min-h-[320px]">
+          <!-- EKG pulse -->
+          <svg viewBox="0 0 400 400" class="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid meet">
+            <line x1="20"  y1="200" x2="380" y2="200" stroke="#F2EDE3" stroke-opacity="0.1" stroke-dasharray="2 4"/>
+            <path id="ekg" d="M20,200 L80,200 L100,200 L110,160 L120,240 L135,170 L145,200 L200,200 L220,200 L230,180 L245,220 L260,200 L380,200"
+                  fill="none" stroke="#C49350" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <text x="200" y="270" text-anchor="middle" fill="#F2EDE3" font-family="Oswald" font-weight="600" font-size="14" letter-spacing="3">PROCESSO</text>
+          </svg>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     QUEM É — Daniel Pedro (centralizado, com foto real)
+============================================================= -->
+<section id="quem" class="relative bg-ink py-24 sm:py-36 px-6 sm:px-10">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="reveal mono-label text-gold mb-12 flex items-center gap-3 justify-center">
+      <span class="num-tag" data-num="05 —"></span>
+      <span class="text-bone/60">Quem conduz</span>
+    </div>
+
+    <div class="grid lg:grid-cols-[auto_1fr] gap-12 lg:gap-16 items-center justify-center max-w-5xl mx-auto">
+
+      <!-- LEFT: portrait + name -->
+      <div class="reveal flex flex-col items-center lg:items-start">
+        <div class="w-[280px] sm:w-[340px] aspect-[4/5] rounded-[2rem] overflow-hidden ring-bone relative bg-ink2">
+          <img src="assets/daniel-pedro.jpg" alt="Daniel Pedro" class="absolute inset-0 w-full h-full object-cover" />
+          <div class="absolute inset-0 pointer-events-none"
+               style="background: linear-gradient(180deg, transparent 55%, rgba(10,9,8,0.75) 100%);"></div>
+          <div class="absolute top-4 right-4 mono-label text-bone/80 flex items-center gap-2 bg-ink/55 backdrop-blur-sm rounded-full px-2.5 py-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-gold pulse-gold"></span> AO VIVO
+          </div>
+        </div>
+        <div class="mt-6 text-center lg:text-left w-full">
+          <div class="font-display text-bone uppercase text-[32px] sm:text-[36px] leading-[0.95]">Daniel Pedro</div>
+          <div class="serif-drama text-gold mt-2 text-[17px]">Fundador · DP Soluções &amp; Investimentos</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: info -->
+      <div class="text-center lg:text-left">
+        <h2 class="reveal display-tight font-display font-semibold uppercase text-bone
+                   text-[11vw] sm:text-[6.4vw] lg:text-[4.6rem]">
+          Mais de R$ 1 bi<br/>sob <span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">gestão.</span>
+        </h2>
+
+        <p class="reveal mt-7 text-bone/75 text-[18px] leading-[1.6] max-w-xl mx-auto lg:mx-0">
+          Daniel Pedro é fundador e dono da <span class="text-bone">DP Soluções &amp; Investimentos</span>
+          — a maior corretora de consórcio de Santa Catarina, com mais de
+          <span class="text-bone">R$ 1 bilhão</span> sob gestão. Atua como operador
+          de vendas no setor de consórcio e é criador da <span class="text-bone">IA para Consórcios</span>.
+          Ensina o que executa — não o que leu.
+        </p>
+
+        <div class="reveal mt-10 grid grid-cols-2 gap-px bg-bone/10 ring-bone rounded-[2rem] overflow-hidden">
+          <div class="bg-ink2 p-6 text-center lg:text-left"><div class="mono-label text-gold mb-3">Sob gestão</div><div class="font-display text-bone text-[32px] sm:text-[36px] leading-none">R$ 1 bi+</div></div>
+          <div class="bg-ink2 p-6 text-center lg:text-left"><div class="mono-label text-gold mb-3">Empresa</div><div class="font-display text-bone text-[18px] leading-tight">DP Soluções<br/>&amp; Investimentos</div></div>
+          <div class="bg-ink2 p-6 text-center lg:text-left"><div class="mono-label text-gold mb-3">Posição</div><div class="font-display text-bone text-[18px] leading-tight">Maior corretora<br/>de SC</div></div>
+          <div class="bg-ink2 p-6 text-center lg:text-left"><div class="mono-label text-gold mb-3">Marca técnica</div><div class="font-display text-bone text-[18px] leading-tight">IA para Consórcios<br/>Criador</div></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="reveal serif-drama text-bone/85 text-[24px] sm:text-[30px] mt-16 max-w-3xl mx-auto text-center">
+      “Não é evento motivacional. É um ambiente direto pra você entender onde está o erro
+      <span class="text-gold">— e o que corrigir.</span>”
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     PROVA SOCIAL — Depoimentos
+============================================================= -->
+<section id="prova" class="relative bg-ink2 py-24 sm:py-32 px-6 sm:px-10 hl-top">
+  <div class="max-w-6xl mx-auto">
+    <div class="reveal mono-label text-gold mb-8 flex items-center gap-3">
+      <span class="num-tag" data-num="06 —"></span>
+      <span class="text-bone/60">Vendedores que saíram com clareza</span>
+    </div>
+    <h2 class="reveal display-tight font-display font-semibold uppercase text-bone
+               text-[10vw] sm:text-[5.6vw] lg:text-[4.6rem] mb-14">
+      Depois da imersão.
+    </h2>
+
+    <div class="grid md:grid-cols-3 gap-6">
+      <!-- 3 testimonial cards (placeholders realistas) -->
+      <figure class="reveal rounded-[2rem] bg-ink ring-bone p-7 sm:p-8">
+        <blockquote class="serif-drama text-bone/90 text-[22px] leading-[1.25]">
+          “Saí entendendo, pela primeira vez, o que <span class="text-gold">não</span>
+          estava funcionando na minha oferta. O resto foi consequência.”
+        </blockquote>
+        <figcaption class="mt-8 flex items-center gap-4">
+          <span class="w-12 h-12 rounded-full bg-gradient-to-br from-gold to-gold3 ring-bone shrink-0"></span>
+          <div class="leading-tight">
+            <div class="font-display uppercase text-bone text-[15px]">R. Almeida</div>
+            <div class="mono-label text-bone/55 mt-1">Vendedor · 6 anos</div>
+          </div>
+        </figcaption>
+        <div class="mt-6 hl-top pt-4 mono-label text-gold/90">
+          +148% em 90 dias · pipeline organizado
+        </div>
+      </figure>
+
+      <figure class="reveal rounded-[2rem] bg-ink ring-bone p-7 sm:p-8">
+        <blockquote class="serif-drama text-bone/90 text-[22px] leading-[1.25]">
+          “Trabalhava 12h por dia e estagnado. Em 2 dias entendi onde estava
+          <span class="text-gold">perdendo venda</span> sem perceber.”
+        </blockquote>
+        <figcaption class="mt-8 flex items-center gap-4">
+          <span class="w-12 h-12 rounded-full bg-gradient-to-br from-gold2 to-ink2 ring-bone shrink-0"></span>
+          <div class="leading-tight">
+            <div class="font-display uppercase text-bone text-[15px]">M. Tanaka</div>
+            <div class="mono-label text-bone/55 mt-1">Vendedor · 9 anos</div>
+          </div>
+        </figcaption>
+        <div class="mt-6 hl-top pt-4 mono-label text-gold/90">
+          Mês mais alto da carreira em 60 dias
+        </div>
+      </figure>
+
+      <figure class="reveal rounded-[2rem] bg-ink ring-bone p-7 sm:p-8">
+        <blockquote class="serif-drama text-bone/90 text-[22px] leading-[1.25]">
+          “Não é motivacional. É <span class="text-gold">cirúrgico.</span>
+          Saí com a próxima ação, não com hype.”
+        </blockquote>
+        <figcaption class="mt-8 flex items-center gap-4">
+          <span class="w-12 h-12 rounded-full bg-gradient-to-br from-gold3 to-gold ring-bone shrink-0"></span>
+          <div class="leading-tight">
+            <div class="font-display uppercase text-bone text-[15px]">C. Vasconcelos</div>
+            <div class="mono-label text-bone/55 mt-1">Líder de equipe · 4 anos</div>
+          </div>
+        </figcaption>
+        <div class="mt-6 hl-top pt-4 mono-label text-gold/90">
+          Equipe 3 → 11 vendedores · processo claro
+        </div>
+      </figure>
+    </div>
+
+    <p class="reveal mt-10 mono-label text-bone/40">
+      ◆ Resultados individuais. A imersão entrega clareza, não promessa.
+    </p>
+  </div>
+</section>
+
+<!-- ============================================================
+     F. VAGA — Bloco único centralizado
+============================================================= -->
+<section id="vaga" class="relative bg-ink py-24 sm:py-36 px-6 sm:px-10">
+  <div class="max-w-3xl mx-auto text-center flex flex-col items-center">
+
+    <div class="reveal mono-label text-gold mb-8 flex items-center gap-3 justify-center">
+      <span class="num-tag" data-num="07 —"></span>
+      <span class="text-bone/60">Sua vaga na imersão</span>
+    </div>
+    <h2 class="reveal display-tight font-display font-semibold uppercase text-bone
+               text-[12vw] sm:text-[7vw] lg:text-[5.6rem] mb-10">
+      Garanta sua<br/><span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">vaga.</span>
+    </h2>
+
+    <p class="reveal text-bone/75 text-[18px] sm:text-[20px] leading-[1.55] max-w-2xl mx-auto mb-10">
+      Imersão presencial de 2 dias com Daniel Pedro. Acesso à sala, diagnóstico
+      individual e próximo passo claro para corrigir o que está travando seu
+      resultado hoje. Vagas limitadas por edição.
+    </p>
+
+    <a href="https://wa.me/" target="_blank" rel="noopener" data-cta="vaga"
+       class="reveal btn-magnetic relative inline-flex items-center gap-3 rounded-full px-8 sm:px-10 py-5
+              bg-gold text-ink font-display font-semibold uppercase tracking-wider text-[15px]">
+      <span class="slide bg-bone"></span>
+      <span>Quero garantir minha vaga</span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+
+  </div>
+</section>
+
+<!-- ============================================================
+     FAQ
+============================================================= -->
+<section id="faq" class="relative bg-ink2 py-24 sm:py-36 px-6 sm:px-10 hl-top">
+  <div class="max-w-5xl mx-auto">
+
+    <div class="reveal mono-label text-gold mb-8 flex items-center gap-3 justify-center">
+      <span class="num-tag" data-num="08 —"></span>
+      <span class="text-bone/60">Objeções respondidas</span>
+    </div>
+    <h2 class="reveal display-tight font-display font-semibold uppercase text-bone text-center
+               text-[12vw] sm:text-[7vw] lg:text-[5.6rem] mb-14">
+      Perguntas<br/><span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">honestas.</span>
+    </h2>
+
+    <div class="divide-y divide-bone/10 ring-bone rounded-[2rem] overflow-hidden">
+
+      <details class="group bg-ink/50">
+        <summary class="flex items-center justify-between gap-6 p-7 sm:p-9">
+          <span class="font-display uppercase text-bone text-[20px] sm:text-[26px]">É mais um evento motivacional?</span>
+          <span class="chev mono-label text-gold text-[22px] leading-none">+</span>
+        </summary>
+        <div class="px-7 sm:px-9 pb-8 -mt-2 text-bone/70 text-[16px] leading-[1.6] max-w-3xl">
+          Não. É um ambiente direto pra você entender onde está o erro e o que
+          corrigir. Sem palco, sem teatro, sem hype — diagnóstico, não show.
+        </div>
+      </details>
+
+      <details class="group bg-ink/50">
+        <summary class="flex items-center justify-between gap-6 p-7 sm:p-9">
+          <span class="font-display uppercase text-bone text-[20px] sm:text-[26px]">Funciona pra quem está começando?</span>
+          <span class="chev mono-label text-gold text-[22px] leading-none">+</span>
+        </summary>
+        <div class="px-7 sm:px-9 pb-8 -mt-2 text-bone/70 text-[16px] leading-[1.6] max-w-3xl">
+          Funciona pra quem já vende e quer sair do resultado instável. Se
+          você ainda não fez sua primeira venda, há etapas anteriores —
+          essa imersão não vai ser a sua.
+        </div>
+      </details>
+
+      <details class="group bg-ink/50">
+        <summary class="flex items-center justify-between gap-6 p-7 sm:p-9">
+          <span class="font-display uppercase text-bone text-[20px] sm:text-[26px]">E se eu já trabalhar muito?</span>
+          <span class="chev mono-label text-gold text-[22px] leading-none">+</span>
+        </summary>
+        <div class="px-7 sm:px-9 pb-8 -mt-2 text-bone/70 text-[16px] leading-[1.6] max-w-3xl">
+          Trabalhar muito não é o problema. O problema é trabalhar sem
+          processo. Se esforço resolvesse, você já teria resolvido.
+        </div>
+      </details>
+
+      <details class="group bg-ink/50">
+        <summary class="flex items-center justify-between gap-6 p-7 sm:p-9">
+          <span class="font-display uppercase text-bone text-[20px] sm:text-[26px]">Por que 2 dias?</span>
+          <span class="chev mono-label text-gold text-[22px] leading-none">+</span>
+        </summary>
+        <div class="px-7 sm:px-9 pb-8 -mt-2 text-bone/70 text-[16px] leading-[1.6] max-w-3xl">
+          Porque clareza não vem de conteúdo. Vem de olhar pro que está
+          errado e organizar — e isso exige tempo concentrado, fora do
+          ruído do dia a dia.
+        </div>
+      </details>
+
+      <details class="group bg-ink/50">
+        <summary class="flex items-center justify-between gap-6 p-7 sm:p-9">
+          <span class="font-display uppercase text-bone text-[20px] sm:text-[26px]">Quem é o Daniel Pedro?</span>
+          <span class="chev mono-label text-gold text-[22px] leading-none">+</span>
+        </summary>
+        <div class="px-7 sm:px-9 pb-8 -mt-2 text-bone/70 text-[16px] leading-[1.6] max-w-3xl">
+          Operador de vendas, mais de R$ 1 bilhão sob gestão, fundador da
+          DP Soluções, DP Educação, DP Consórcios e da IA para Consórcios.
+          Ensina o que executa.
+        </div>
+      </details>
+
+      <details class="group bg-ink/50">
+        <summary class="flex items-center justify-between gap-6 p-7 sm:p-9">
+          <span class="font-display uppercase text-bone text-[20px] sm:text-[26px]">Como confirmo minha vaga?</span>
+          <span class="chev mono-label text-gold text-[22px] leading-none">+</span>
+        </summary>
+        <div class="px-7 sm:px-9 pb-8 -mt-2 text-bone/70 text-[16px] leading-[1.6] max-w-3xl">
+          Pelo botão abaixo, você fala diretamente com a equipe via WhatsApp
+          ou é direcionado à página de checkout. As vagas são limitadas por
+          edição — confirmação por ordem de pagamento.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CTA FINAL
+============================================================= -->
+<section id="cta-final" class="relative bg-ink py-28 sm:py-44 px-6 sm:px-10 overflow-hidden">
+
+  <div class="absolute inset-0 pointer-events-none opacity-[0.18]"
+       style="background:
+         radial-gradient(900px 600px at 50% 20%, rgba(188,151,89,0.55), transparent 60%),
+         radial-gradient(600px 400px at 80% 90%, rgba(99,88,76,0.6), transparent 60%);">
+  </div>
+
+  <div class="relative max-w-5xl mx-auto text-center">
+    <div class="reveal mono-label text-gold mb-8 inline-flex items-center gap-3 ring-bone rounded-full px-4 py-2">
+      <span class="w-1.5 h-1.5 rounded-full bg-gold pulse-gold"></span>
+      Última chamada · vagas limitadas
+    </div>
+
+    <h2 class="reveal display-tight font-display font-semibold uppercase text-bone
+               text-[12vw] sm:text-[7.4vw] lg:text-[6.8rem] mx-auto">
+      Continue como sempre.
+      <span class="block mt-2 sm:mt-4">
+        <span class="serif-drama text-gold normal-case lowercase" style="font-size:1.06em;">Ou corrija agora.</span>
+      </span>
+    </h2>
+
+    <p class="reveal mt-8 sm:mt-10 max-w-2xl mx-auto text-bone/75 text-[18px] sm:text-[20px] leading-[1.55]">
+      Você pode continuar vendendo do jeito que sempre vendeu.
+      Ou pode entender o que está errado — e começar a corrigir
+      em 2 dias presenciais com Daniel Pedro.
+    </p>
+
+    <div class="reveal mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="https://wa.me/" target="_blank" rel="noopener" data-cta="final"
+         class="btn-magnetic relative inline-flex items-center gap-3 rounded-full px-8 sm:px-10 py-5
+                bg-gold text-ink font-display font-semibold uppercase tracking-wider text-[15px]">
+        <span class="slide bg-bone"></span>
+        <span>Garantir minha vaga agora</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+      <a href="#faq" class="lift mono-label text-bone/65 hover:text-bone px-4 py-2">
+        Tenho mais uma dúvida →
+      </a>
+    </div>
+
+    <div class="reveal mt-14 grid grid-cols-2 sm:grid-cols-4 gap-y-6 max-w-3xl mx-auto mono-label text-bone/55">
+      <div><div class="text-gold mb-1">VAGAS</div>Limitadas · edição</div>
+      <div><div class="text-gold mb-1">FORMATO</div>Presencial · 2 dias</div>
+      <div><div class="text-gold mb-1">GARANTIA</div>7 dias · integral</div>
+      <div><div class="text-gold mb-1">ATENDIMENTO</div>WhatsApp direto</div>
+    </div>
+  </div>
+</section>
+
+<!-- Copyright minimalista -->
+<div class="relative bg-ink py-8 px-6 text-center mono-label text-bone/40" style="box-shadow: inset 0 1px 0 rgba(242,237,227,0.08);">
+  DP Soluções &amp; Investimentos © 2026. Todos os direitos reservados.
+</div>
+<!-- Footer removido — LP de conversão sem distração final -->
+<footer style="display:none;" class="relative bg-ink2 rounded-t-[3rem] sm:rounded-t-[4rem] mt-0 pt-20 sm:pt-28 px-6 sm:px-10 pb-10">
+  <div class="max-w-6xl mx-auto">
+
+    <div class="grid md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-12">
+      <div>
+        <div class="flex items-center gap-2 mb-5">
+          <span class="inline-block w-2 h-2 rounded-full bg-gold pulse-gold"></span>
+          <span class="font-display font-semibold text-[18px] tracking-wide uppercase text-bone">Consórcio Milionário</span>
+        </div>
+        <p class="text-bone/60 text-[14.5px] leading-[1.6] max-w-sm">
+          Imersão presencial de 2 dias para vendedores de consórcio que querem
+          sair do resultado instável. Conduzida por Daniel Pedro.
+        </p>
+      </div>
+      <div>
+        <div class="mono-label text-gold mb-4">Imersão</div>
+        <ul class="space-y-3 text-bone/70 text-[14.5px]">
+          <li><a class="lift" href="#metodo">Método</a></li>
+          <li><a class="lift" href="#dias">2 dias</a></li>
+          <li><a class="lift" href="#vaga">Investimento</a></li>
+          <li><a class="lift" href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="mono-label text-gold mb-4">Daniel Pedro</div>
+        <ul class="space-y-3 text-bone/70 text-[14.5px]">
+          <li><a class="lift" href="#quem">Sobre</a></li>
+          <li><a class="lift" href="#">DP Soluções</a></li>
+          <li><a class="lift" href="#">DP Consórcios</a></li>
+          <li><a class="lift" href="#">IA para Consórcios</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="mono-label text-gold mb-4">Contato</div>
+        <ul class="space-y-3 text-bone/70 text-[14.5px]">
+          <li><a class="lift" href="https://wa.me/" target="_blank" rel="noopener">WhatsApp direto</a></li>
+          <li><a class="lift" href="mailto:contato@danielpedro.com">contato@danielpedro.com</a></li>
+          <li class="text-bone/45">São Paulo · Brasil</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="hl-top mt-16 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 mono-label text-bone/45">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 pulse-green"></span>
+        Sistema operacional · Inscrições abertas · Edição em SP
+      </div>
+      <div class="flex items-center gap-6">
+        <span>© 2026 DP Soluções</span>
+        <a href="#" class="lift hover:text-bone">Privacidade</a>
+        <a href="#" class="lift hover:text-bone">Termos</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     SCRIPTS — Animações + interações
+============================================================= -->
+<script>
+(function(){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // Mark ready for CSS reveal fallback
+  document.documentElement.classList.add('ready');
+
+  /* ---------- GSAP setup ---------- */
+  if (window.gsap && window.ScrollTrigger){
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Hero fade-up stagger
+    gsap.from('#topo .reveal', {
+      y: 40, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.08,
+      delay: 0.15, clearProps: 'opacity,transform'
+    });
+
+    // Generic reveal-on-scroll for .reveal outside hero — IntersectionObserver
+    // (resilient to anchor jumps; ScrollTrigger misses targets when scrollIntoView skips trigger zones)
+    const revealEls = document.querySelectorAll('section:not(#topo) .reveal');
+    const revealIO = new IntersectionObserver((entries)=>{
+      entries.forEach(entry=>{
+        if (entry.isIntersecting){
+          const el = entry.target;
+          gsap.to(el, {
+            y: 0, opacity: 1, duration: 0.9, ease: 'power3.out',
+            clearProps: 'opacity,transform'
+          });
+          revealIO.unobserve(el);
+        }
+      });
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0.01 });
+    revealEls.forEach(el => revealIO.observe(el));
+
+    // Safety net: if user anchor-jumps, force-reveal everything currently in viewport on next frame
+    function forceRevealInView(){
+      revealEls.forEach(el=>{
+        const r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0 && getComputedStyle(el).opacity === '0'){
+          gsap.set(el, { opacity: 1, y: 0, clearProps: 'opacity,transform' });
+          revealIO.unobserve(el);
+        }
+      });
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', ()=> setTimeout(forceRevealInView, 700));
+    });
+
+    // Nav island transformation past hero
+    const island = document.getElementById('nav-island');
+    ScrollTrigger.create({
+      trigger: '#topo',
+      start: 'bottom 90px',
+      onEnter: () => island.classList.add('is-scrolled'),
+      onLeaveBack: () => island.classList.remove('is-scrolled'),
+    });
+
+    // Philosophy parallax
+    gsap.to('#philosophy-bg', {
+      yPercent: -15,
+      scrollTrigger: { trigger: '#filosofia', start: 'top bottom', end: 'bottom top', scrub: true }
+    });
+
+    // Helix rotation in stack card 1
+    gsap.to('.helix', {
+      rotation: 360, transformOrigin: '50% 50%', repeat: -1, duration: 26, ease: 'none'
+    });
+    gsap.to('.helix-dots', {
+      rotation: -360, transformOrigin: '50% 50%', repeat: -1, duration: 18, ease: 'none'
+    });
+
+    // Chart ascending in stack card 2
+    gsap.to('.chart-line', { strokeDashoffset: 0, duration: 2.6, ease: 'power2.out', repeat: -1, repeatDelay: 1.4, yoyo: true });
+    gsap.to('.chart-area', { opacity: 1, duration: 1.4, ease: 'power2.out', delay: 1.2, repeat: -1, repeatDelay: 2.6, yoyo: true });
+    gsap.to('.chart-arrow', { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 2.2, repeat: -1, repeatDelay: 3.4, yoyo: true });
+    gsap.fromTo('.chart-dots circle', { scale: 0, transformOrigin:'center' }, { scale: 1, duration: 0.4, stagger: 0.25, delay: 0.4, ease:'back.out(2)', repeat:-1, repeatDelay: 4, yoyo:true });
+
+    // EKG stroke-dashoffset
+    const ekg = document.getElementById('ekg');
+    if (ekg){
+      const len = ekg.getTotalLength();
+      ekg.style.strokeDasharray = len;
+      ekg.style.strokeDashoffset = len;
+      gsap.to(ekg, {
+        strokeDashoffset: 0, duration: 2.6, ease: 'power2.inOut',
+        repeat: -1, yoyo: false,
+        onRepeat: ()=>{ ekg.style.strokeDashoffset = len; }
+      });
+    }
+
+    // Sticky stack: scale-down + blur previous cards as next pins in
+    const cards = gsap.utils.toArray('#stack-wrapper .stack-card');
+    cards.forEach((card, i) => {
+      if (i < cards.length - 1){
+        gsap.to(card, {
+          scale: 0.92,
+          filter: 'blur(6px)',
+          opacity: 0.5,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: cards[i+1],
+            start: 'top 80%',
+            end: 'top 30%',
+            scrub: true,
+          }
+        });
+      }
+    });
+  }
+
+  /* ---------- Nav island state ---------- */
+  const islandEl = document.getElementById('nav-island');
+  function applyIslandState(){
+    if (!islandEl) return;
+    if (islandEl.classList.contains('is-scrolled')){
+      islandEl.style.background = 'rgba(19,17,15,0.72)';
+      islandEl.style.backdropFilter = 'blur(18px) saturate(140%)';
+      islandEl.style.borderColor = 'rgba(242,237,227,0.10)';
+      islandEl.style.boxShadow = '0 12px 40px -10px rgba(0,0,0,0.6)';
+    } else {
+      islandEl.style.background = 'transparent';
+      islandEl.style.backdropFilter = 'none';
+      islandEl.style.borderColor = 'transparent';
+      islandEl.style.boxShadow = 'none';
+    }
+  }
+  // Watch class changes
+  if (islandEl) new MutationObserver(applyIslandState).observe(islandEl, { attributes:true, attributeFilter:['class'] });
+  applyIslandState();
+
+  /* ---------- Card 1: Diagnostic Shuffler ---------- */
+  const shufflerLabels = [
+    { tag: 'A · Topo de mercado', body: 'Operadores grandes que dominam fluxo, capital e crédito.' },
+    { tag: 'B · Faixa do meio',   body: 'Vendedores com volume mas sem leitura — onde você provavelmente está.' },
+    { tag: 'C · Base instável',   body: 'Quem depende de sorte, vento e indicação solta.' },
+  ];
+  const shuffler = document.getElementById('shuffler');
+  if (shuffler){
+    shufflerLabels.forEach((item, i)=>{
+      const el = document.createElement('div');
+      el.className = 'absolute left-0 right-0 rounded-2xl bg-ink2 ring-bone p-5 stack-shadow will-change-transform';
+      el.innerHTML = `
+        <div class="flex items-center justify-between mb-3">
+          <span class="mono-label text-gold">${item.tag}</span>
+          <span class="mono-label text-bone/40">0${i+1}</span>
+        </div>
+        <p class="text-bone/85 text-[14px] leading-[1.5]">${item.body}</p>`;
+      shuffler.appendChild(el);
+    });
+    const items = [...shuffler.children]; // [0,1,2]
+    let order = [0,1,2];
+    function place(animated){
+      order.forEach((idx, pos)=>{
+        const el = items[idx];
+        const top = pos * 14;
+        const scale = 1 - pos * 0.05;
+        const z = 10 - pos;
+        const opacity = pos === 2 ? 0.55 : 1;
+        if (animated){
+          gsap.to(el, { y: top, scale, opacity, zIndex: z, duration: 0.7, ease: 'cubic-bezier(.34,1.56,.64,1)' });
+        } else {
+          gsap.set(el, { y: top, scale, opacity, zIndex: z });
+        }
+      });
+    }
+    place(false);
+    if (!reduced){
+      setInterval(()=>{
+        // arr.unshift(arr.pop())
+        order.unshift(order.pop());
+        place(true);
+      }, 3000);
+    }
+  }
+
+  /* ---------- Card 2: Telemetry Typewriter ---------- */
+  const feed = document.getElementById('feed');
+  const lines = [
+    '> conectando ao pipeline.....................OK',
+    '> lead#0421 → entrou frio · oferta padrão',
+    '> objeção: "vou pensar"   ✕ sem condução',
+    '> follow-up: 7 dias       ✕ atrasado',
+    '> diagnóstico: oferta não calibrada à dor',
+    '> próximo passo: refazer abertura · script B',
+    '> ──────────────────────────────────────────',
+    '> lead#0438 → quente · pediu detalhe técnico',
+    '> objeção: preço          ✓ ancoragem clara',
+    '> fechamento: confirmado  · ticket R$ 86k',
+    '> diagnóstico: oferta calibrada · processo aplicado',
+    '> ──────────────────────────────────────────',
+  ];
+  if (feed && !reduced){
+    let i = 0;
+    let charIdx = 0;
+    let buffer = '';
+    function tick(){
+      if (i >= lines.length){
+        // restart
+        i = 0; charIdx = 0; buffer = '';
+        feed.innerHTML = '';
+        return setTimeout(tick, 1200);
+      }
+      const line = lines[i];
+      if (charIdx < line.length){
+        buffer += line[charIdx++];
+        feed.innerHTML = renderFeed(buffer);
+        const speed = 14 + Math.random()*30;
+        setTimeout(tick, speed);
+      } else {
+        buffer += '\n';
+        i++; charIdx = 0;
+        // scroll
+        feed.scrollTop = feed.scrollHeight;
+        setTimeout(tick, 250);
+      }
+    }
+    function renderFeed(buf){
+      // colorize OK/✓ in gold, ✕ in red-ish
+      const esc = buf.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const html = esc
+        .replace(/(OK|✓[^\\n]*)/g,'<span style="color:#C49350">$1</span>')
+        .replace(/(✕[^\\n]*)/g,'<span style="color:#C77B6A">$1</span>')
+        .replace(/(diagnóstico:[^\\n]*)/gi,'<span style="color:#F2EDE3">$1</span>');
+      return html + '<span class="caret"></span>';
+    }
+    tick();
+  } else if (feed){
+    feed.textContent = lines.join('\n');
+  }
+
+  /* ---------- Card 3: Cursor Protocol Scheduler ---------- */
+  const grid = document.getElementById('scheduler-grid');
+  const cursor = document.getElementById('cursor');
+  const saveBtn = document.getElementById('save-btn');
+  if (grid){
+    // 21 cells (3 rows × 7)
+    const total = 21;
+    for (let i=0;i<total;i++){
+      const cell = document.createElement('div');
+      cell.className = 'aspect-[4/3] rounded-md bg-ink ring-bone flex items-center justify-center mono-label text-bone/35';
+      cell.textContent = String(i+1).padStart(2,'0');
+      cell.dataset.idx = i;
+      grid.appendChild(cell);
+    }
+  }
+  if (cursor && grid && saveBtn && !reduced){
+    function runScheduler(){
+      const cells = [...grid.children];
+      const targets = [4, 11, 18]; // tue weeks 1/2/3
+      const tl = gsap.timeline({ repeat: -1, repeatDelay: 1.4 });
+      tl.set(cursor, { opacity: 1, x: 0, y: 0 });
+      // start point near top-left of grid
+      const containerRect = grid.parentElement.getBoundingClientRect();
+      function rectOf(el){
+        const r = el.getBoundingClientRect();
+        return {
+          x: r.left - containerRect.left + r.width/2 - 11,
+          y: r.top  - containerRect.top  + r.height/2 - 11,
+        };
+      }
+      tl.set(cursor, { x: 16, y: 14, opacity: 0 });
+      tl.to(cursor, { opacity: 1, duration: 0.4 });
+      targets.forEach((idx)=>{
+        const cell = cells[idx];
+        const p = rectOf(cell);
+        tl.to(cursor, { x: p.x, y: p.y, duration: 0.65, ease: 'power3.out' })
+          .to(cursor, { scale: 0.85, duration: 0.12, ease: 'power2.in' })
+          .add(()=>{
+            cell.style.background = '#C49350';
+            cell.style.color = '#0A0908';
+            cell.classList.add('is-active');
+          })
+          .to(cursor, { scale: 1, duration: 0.18, ease: 'power2.out' })
+          .to({}, { duration: 0.25 });
+      });
+      // move to save
+      const saveP = rectOf(saveBtn);
+      tl.to(cursor, { x: saveP.x, y: saveP.y, duration: 0.7, ease: 'power3.out' })
+        .to(cursor, { scale: 0.85, duration: 0.12 })
+        .add(()=>{
+          saveBtn.style.background = '#F2EDE3';
+          saveBtn.querySelector('span:last-child').textContent = 'Saved ✓';
+        })
+        .to(cursor, { scale: 1, duration: 0.18 })
+        .to(cursor, { opacity: 0, duration: 0.6, delay: 0.4 })
+        .add(()=>{
+          // reset for next loop
+          [...grid.children].forEach(c=>{ c.style.background=''; c.style.color=''; c.classList.remove('is-active'); });
+          saveBtn.style.background = '';
+          saveBtn.querySelector('span:last-child').textContent = 'Save';
+        });
+    }
+    // Kick off when in view
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        if (e.isIntersecting){
+          runScheduler();
+          io.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    io.observe(grid);
+  }
+
+  /* ---------- Smooth-scroll anchor (mild, no plugin) ---------- */
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', (e)=>{
+      const id = a.getAttribute('href');
+      if (id.length < 2) return;
+      const t = document.querySelector(id);
+      if (!t) return;
+      e.preventDefault();
+      t.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
+})();
+</script>
+</body>
+</html>
